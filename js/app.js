@@ -39,26 +39,30 @@
       });
     },
     evaluationView: commons.loginRequiredView(function () {
-      //查看是否有evaluation這個class
+       //查看是否有evaluation這個class
        //Creates a new subclass of Parse.Object for the given Parse class name.
       var Evaluation = Parse.Object.extend('Evaluation');
       //現在登入的User（如果沒有，就是undefined
       var currentUser = Parse.User.current();
+
       //權限   
       //Creates a new ACL.
       //An ACL, or Access Control List can be added to any Parse.Object to restrict access to only a subset of users of your application. 
       var evaluationACL = new Parse.ACL();
-      //Creates a new ACL.
-      //An ACL, or Access Control List can be added to any Parse.Object to restrict access to only a subset of users of your application.
+
       evaluationACL.setPublicReadAccess(false);
       evaluationACL.setPublicWriteAccess(false);
       evaluationACL.setReadAccess(currentUser, true);
       evaluationACL.setWriteAccess(currentUser, true);
-      
-     //準備做查找"Evaluation"這個class的動作  
+
+
+       //準備做查找"Evaluation"這個class的動作     
       var query = new Parse.Query(Evaluation);
-      //找到的第一個，就開始做這些動作
+
+      //查找：看currentUser是否能符合'user'裡的項目
       query.equalTo('user', currentUser);
+
+      //找到的第一個，就開始做這些動作
       query.first({
         success: function(evaluation){
           window.EVAL = evaluation;
@@ -91,6 +95,7 @@
 
             //設定：填好每個人的評分之後，設定到evaluations裡面
             evaluation.set('evaluations', TeamMembers);
+
             //儲存
             evaluation.save(null, {
               //儲存成功
